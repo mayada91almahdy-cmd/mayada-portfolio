@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayada Amgad Al-Mahdy — GIS Specialist &amp; Data Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:            #0E1620;
+    --bg-raise:      #16212C;
+    --panel:         #1B2733;
+    --line:          #2A3846;
+    --text:          #EAEEF2;
+    --text-dim:      #8E9BAA;
+    --gold:          #C9963F;
+    --gold-soft:     rgba(201,150,63,.14);
+    --teal:          #3E9C93;
+    --teal-soft:     rgba(62,156,147,.14);
+    --clay:          #B5573F;
+    --sage:          #6F9C5C;
+    --slate:         #5C7FA6;
+    --radius:        3px;
+    --maxw:          1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+  }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+
+  /* background grid texture */
+  .grid-bg{
+    position:fixed; inset:0; z-index:-1;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:.25;
+    mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 75%);
+  }
+
+  /* ===== NAV ===== */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,22,32,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .brand{font-weight:600; letter-spacing:.02em; font-size:15px;}
+  .brand span{color:var(--gold);}
+  .navlinks{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
+  .navlinks a{
+    font-size:13px; text-transform:uppercase; letter-spacing:.09em;
+    text-decoration:none; color:var(--text-dim);
+    padding:6px 2px; border-bottom:1px solid transparent;
+    transition:color .15s, border-color .15s;
+  }
+  .navlinks a:hover, .navlinks a:focus-visible{color:var(--text); border-color:var(--gold);}
+  .navtoggle{display:none; background:none; border:1px solid var(--line); color:var(--text); padding:8px 10px; border-radius:var(--radius);}
+  :focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+
+  /* ===== HERO ===== */
+  .hero{padding:96px 0 64px; position:relative;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.08em;
+    color:var(--gold); text-transform:uppercase; margin-bottom:22px;
+  }
+  .eyebrow::before{content:"◎"; font-size:13px;}
+  .hero h1{
+    font-size:clamp(2.4rem, 5vw, 4rem);
+    line-height:1.05; margin:0 0 18px; font-weight:700; letter-spacing:-.01em;
+    max-width:820px;
+  }
+  .hero h1 em{
+    font-style:normal; color:var(--gold);
+    background:linear-gradient(transparent 62%, var(--gold-soft) 62%);
+  }
+  .hero p.lede{
+    font-size:1.1rem; color:var(--text-dim); max-width:600px; margin:0 0 36px;
+  }
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:64px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 22px; border-radius:var(--radius);
+    font-size:14px; font-weight:600; text-decoration:none;
+    border:1px solid transparent; cursor:pointer;
+    transition:transform .15s, background .15s, border-color .15s;
+  }
+  .btn-primary{background:var(--gold); color:#12181F;}
+  .btn-primary:hover{transform:translateY(-1px); background:#dba955;}
+  .btn-ghost{border-color:var(--line); color:var(--text);}
+  .btn-ghost:hover{border-color:var(--gold); color:var(--gold);}
+
+  /* readout strip — signature element, styled after her own dashboard popup cards */
+  .readout{
+    display:grid; grid-template-columns:repeat(4,1fr);
+    border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--panel); overflow:hidden;
+  }
+  .readout .cell{
+    padding:20px 22px; border-right:1px solid var(--line);
+  }
+  .readout .cell:last-child{border-right:none;}
+  .readout .cell .num{
+    font-family:'IBM Plex Mono',monospace; font-size:1.7rem; font-weight:600; color:var(--gold);
+    display:block;
+  }
+  .readout .cell .lbl{
+    font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; display:block;
+  }
+  @media (max-width:760px){
+    .readout{grid-template-columns:repeat(2,1fr);}
+    .readout .cell:nth-child(2){border-right:none;}
+  }
+
+  /* ===== SECTION SHELL ===== */
+  section{padding:84px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .sec-head{margin-bottom:44px; max-width:640px;}
+  .sec-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.09em;
+    color:var(--teal); text-transform:uppercase; margin-bottom:10px; display:block;
+  }
+  .sec-head h2{font-size:clamp(1.6rem,3vw,2.2rem); margin:0 0 12px;}
+  .sec-head p{color:var(--text-dim); margin:0;}
+
+  /* ===== ABOUT ===== */
+  .about-grid{display:grid; grid-template-columns:1.3fr .9fr; gap:56px; align-items:start;}
+  @media (max-width:820px){.about-grid{grid-template-columns:1fr;}}
+  .about-grid p{color:var(--text-dim); margin:0 0 16px;}
+  .about-grid p strong{color:var(--text); font-weight:600;}
+  .profile-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px; position:relative; overflow:hidden;
+  }
+  .profile-card::before{
+    content:""; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--gold);
+  }
+  .profile-card h3{margin:0 0 16px; font-size:15px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim);}
+  .profile-card ul{list-style:none; margin:0; padding:0;}
+  .profile-card li{
+    display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .profile-card li:last-child{border-bottom:none;}
+  .profile-card li span:first-child{color:var(--text-dim);}
+  .profile-card li span:last-child{font-family:'IBM Plex Mono',monospace; color:var(--text);}
+
+  /* ===== EXPERIENCE ===== */
+  .exp-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:32px; display:grid; grid-template-columns:220px 1fr; gap:32px;
+  }
+  @media (max-width:760px){.exp-card{grid-template-columns:1fr;}}
+  .exp-meta .role{font-weight:600; font-size:1.05rem; margin-bottom:6px;}
+  .exp-meta .org{color:var(--teal); font-size:14px; margin-bottom:4px;}
+  .exp-meta .period{color:var(--text-dim); font-size:13px; font-family:'IBM Plex Mono',monospace;}
+  .exp-body ul{margin:0; padding-left:18px; color:var(--text-dim);}
+  .exp-body li{margin-bottom:10px;}
+  .exp-body li::marker{color:var(--gold);}
+
+  /* ===== PROJECT TABS ===== */
+  .tabs{display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap;}
+  .tab-btn{
+    background:none; border:1px solid var(--line); color:var(--text-dim);
+    padding:10px 18px; border-radius:var(--radius); font-size:13px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-weight:500; transition:all .15s;
+  }
+  .tab-btn.active{background:var(--gold-soft); border-color:var(--gold); color:var(--gold);}
+  .tab-btn:hover:not(.active){border-color:var(--text-dim); color:var(--text);}
+
+  .proj-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+  @media (max-width:760px){.proj-grid{grid-template-columns:1fr;}}
+  .tabpanel{display:none;}
+  .tabpanel.active{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+  @media (max-width:760px){.tabpanel.active{grid-template-columns:1fr;}}
+
+  .proj-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:0; overflow:hidden; position:relative;
+    transition:border-color .15s, transform .15s;
+  }
+  .proj-card:hover{border-color:var(--accent,var(--gold)); transform:translateY(-2px);}
+  .proj-card .tab-strip{height:4px; background:var(--accent,var(--gold));}
+  .proj-card .proj-inner{padding:22px 24px 24px;}
+  .proj-card .proj-ar{
+    font-size:12px; color:var(--text-dim); margin-bottom:6px; direction:rtl; text-align:right; font-family:'Inter',sans-serif;
+  }
+  .proj-card h3{font-size:1.05rem; margin:0 0 10px;}
+  .proj-card p{color:var(--text-dim); font-size:13.5px; margin:0 0 16px;}
+  .proj-stat{
+    display:flex; align-items:baseline; gap:8px;
+    font-family:'IBM Plex Mono',monospace; color:var(--accent,var(--gold)); font-size:1.3rem; font-weight:600;
+  }
+  .proj-stat span{font-size:11px; font-family:'Inter',sans-serif; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em;}
+
+  /* ===== GALLERY ===== */
+  .gallery-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.gallery-grid{grid-template-columns:1fr;}}
+  .gallery-item{
+    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--bg-raise);
+  }
+  .gallery-item .shot{
+    aspect-ratio:16/10; background:linear-gradient(135deg,#1B2733,#101820);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); font-size:12px; font-family:'IBM Plex Mono',monospace;
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .gallery-item .shot img{width:100%; height:100%; object-fit:cover;}
+  .gallery-item .cap{padding:12px 16px; font-size:13px; color:var(--text-dim);}
+  .gallery-item .cap strong{color:var(--text); display:block; margin-bottom:2px; font-size:13.5px;}
+
+  /* carousel controls */
+  .gallery-item .shot{position:relative;}
+  .car-btn{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:32px; height:32px; border-radius:50%;
+    background:rgba(14,22,32,.7); border:1px solid var(--line); color:var(--text);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px;
+    transition:background .15s, border-color .15s;
+  }
+  .car-btn:hover{background:rgba(14,22,32,.9); border-color:var(--gold);}
+  .car-prev{left:8px;} .car-next{right:8px;}
+  .car-dots{
+    position:absolute; bottom:8px; left:0; right:0;
+    display:flex; justify-content:center; gap:6px;
+  }
+  .car-dots .dot{
+    width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.35); cursor:pointer;
+  }
+  .car-dots .dot.active{background:var(--gold);}
+  .car-page-count{
+    position:absolute; top:8px; right:8px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dim);
+    background:rgba(14,22,32,.7); border:1px solid var(--line); border-radius:12px; padding:2px 9px;
+  }
+
+  /* ===== SKILLS ===== */
+  .skill-groups{display:grid; grid-template-columns:repeat(2,1fr); gap:32px;}
+  @media (max-width:700px){.skill-groups{grid-template-columns:1fr;}}
+  .skill-group h4{font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--teal); margin:0 0 14px;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    border:1px solid var(--line); border-radius:20px; padding:7px 14px; font-size:13px; color:var(--text-dim);
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  /* ===== CONTACT / FOOTER ===== */
+  footer{padding:70px 0 40px;}
+  .contact-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:40px; align-items:end; margin-bottom:56px;}
+  @media (max-width:760px){.contact-grid{grid-template-columns:1fr;}}
+  .contact-grid h2{font-size:clamp(1.8rem,4vw,2.6rem); margin:0 0 16px;}
+  .contact-links{display:flex; flex-direction:column; gap:10px;}
+  .contact-links a{
+    text-decoration:none; color:var(--text); font-size:15px; padding:12px 16px;
+    border:1px solid var(--line); border-radius:var(--radius); display:flex; justify-content:space-between;
+    transition:border-color .15s, background .15s;
+  }
+  .contact-links a:hover{border-color:var(--gold); background:var(--gold-soft);}
+  .contact-links a .arrow{color:var(--gold);}
+  .footer-bottom{
+    border-top:1px solid var(--line); padding-top:24px;
+    display:flex; justify-content:space-between; color:var(--text-dim); font-size:12.5px; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (max-width:820px){
+    .navlinks{
+      position:fixed; top:64px; left:0; right:0; background:var(--bg-raise);
+      flex-direction:column; padding:20px 28px; border-bottom:1px solid var(--line);
+      display:none; gap:16px;
+    }
+    .navlinks.open{display:flex;}
+    .navtoggle{display:block;}
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="#top">MAYADA <span>·</span> GIS</a>
+    <ul class="navlinks" id="navlinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="navtoggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero wrap">
+    <span class="eyebrow">30.5° N, 30.9° E — Monufia Governorate, Egypt</span>
+    <h1>Turning governorate-scale data into <em>maps people can act on</em>.</h1>
+    <p class="lede">GIS Specialist &amp; Data Analyst building interactive Power BI dashboards for urban planning, civic infrastructure, and business intelligence — from a 116,682-record violations database to real estate pipeline analytics.</p>
+    <div class="cta-row">
+      <a href="#projects" class="btn btn-primary">View Dashboards</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+    <div class="readout">
+      <div class="cell"><span class="num">11</span><span class="lbl">Dashboards Built</span></div>
+      <div class="cell"><span class="num">116,682+</span><span class="lbl">Records Analyzed</span></div>
+      <div class="cell"><span class="num">8</span><span class="lbl">Civic Domains</span></div>
+      <div class="cell"><span class="num">100K+</span><span class="lbl">Rows / Source DB</span></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap about-grid">
+      <div>
+        <span class="sec-tag">01 — About</span>
+        <h2>Field-level data, governorate-level view.</h2>
+        <p>I'm a <strong>GIS Specialist and Data Analyst</strong> with hands-on experience in urban planning and building-regulation monitoring for <strong>Monufia Governorate, Egypt</strong>. I specialize in transforming large, complex datasets into interactive Power BI dashboards, structured reports, and clear spatial maps that support real decision-making.</p>
+        <p>I've built end-to-end data pipelines — from Access databases with <strong>100K+ records</strong>, through Power Query cleaning and DAX modeling, to interactive dashboards with geographic distribution and time-trend analysis. Detail-oriented, deadline-driven, and comfortable solving technical challenges independently.</p>
+      </div>
+      <div class="profile-card">
+        <h3>Quick Facts</h3>
+        <ul>
+          <li><span>Based in</span><span>Monufia, Egypt</span></li>
+          <li><span>Focus</span><span>GIS · Power BI · Access</span></li>
+          <li><span>Current role</span><span>Governorate GIS Analyst</span></li>
+          <li><span>Open to</span><span>Data / GIS roles</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag">02 — Experience</span>
+        <h2>Building Regulation Monitoring</h2>
+      </div>
+      <div class="exp-card">
+        <div class="exp-meta">
+          <div class="role">GIS &amp; Data Analyst</div>
+          <div class="org">Monufia Governorate</div>
+          <div class="period">2017 — Present</div>
+        </div>
+        <div class="exp-body">
+          <ul>
+            <li>Built and maintain a governorate-wide Power BI dashboard tracking <strong>116,682 spatial building variables</strong> (2017–present): 87,087 licensed, 11,151 pending reconciliation (تصالح), and 8,631 unlicensed violations.</li>
+            <li>Designed the full data pipeline: Power Query transformation, DAX measures, time-trend analysis, and filtering by governing authority, affiliated entity, and district.</li>
+            <li>Resolved technical infrastructure issues (Office/Power BI bitness conflicts) to enable direct Access connectivity.</li>
+            <li>Managed data-architecture decisions for tracking status changes over time across multiple snapshots.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag">03 — Featured Projects</span>
+        <h2>Eleven dashboards, two directions.</h2>
+        <p>Governorate-wide civic monitoring on one side, business intelligence on the other — same rigor, different data.</p>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="gov">Government &amp; Urban Planning</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="biz">Business Intelligence</button>
+      </div>
+
+      <div class="tabpanel active" id="tab-gov">
+        <article class="proj-card" style="--accent:var(--gold)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">منظومة متابعة المتغيرات — لوحة تنفيذية</div>
+            <h3>Building Variables Tracking System — Executive Dashboard</h3>
+            <p>A 5-page executive Power BI system (2025–2026) tracking 30,684 building variables across Monufia's centers, with legalization-progress KPIs (completion rate toward target, licenses issued, lagging centers) and a full breakdown by reconciliation (تصالح) stage.</p>
+            <div class="proj-stat">30,684<span>Variables Tracked</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--sage)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">الخريطة التفاعلية لتصنيف استخدامات الأراضي</div>
+            <h3>Interactive Land-Use Classification Map</h3>
+            <p>Classifying 118 land-use records — residential, commercial, administrative, service, vacant — for a Monufia district, combined with a population-census data layer.</p>
+            <div class="proj-stat">118<span>Records Mapped</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--slate)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">المعاهد الأزهرية بمحافظة المنوفية</div>
+            <h3>Azhari Institutes Dashboard</h3>
+            <p>Mapping 600 Azhari educational institutes by stage, shift, type, and gender distribution, with per-institute student and teacher counts.</p>
+            <div class="proj-stat">600<span>Institutes</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--gold)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">المواقف العمومية بمحافظة المنوفية</div>
+            <h3>Public Parking Facilities Dashboard</h3>
+            <p>Mapping 29 public parking locations with satellite-based geolocation, operational-status tracking, and dynamic filtering.</p>
+            <div class="proj-stat">29<span>Locations</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--teal)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">محطات معالجة المياه بمحافظة المنوفية</div>
+            <h3>Water Treatment Stations Dashboard</h3>
+            <p>Covering 26 treatment stations, comparing design vs. actual capacity and mapping service-area coverage.</p>
+            <div class="proj-stat">26<span>Stations</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--clay)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">مكاتب القوى العاملة بمحافظة المنوفية</div>
+            <h3>Labor Force Offices Dashboard</h3>
+            <p>Tracking 43 labor offices governorate-wide, monitoring operational status and office-type distribution.</p>
+            <div class="proj-stat">43<span>Offices</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--sage)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">المباني الأثرية بمحافظة المنوفية</div>
+            <h3>Heritage &amp; Archaeological Sites Dashboard</h3>
+            <p>Mapping 7 registered heritage buildings with legal registration data and geographic distribution.</p>
+            <div class="proj-stat">7<span>Heritage Sites</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--slate)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">مبادرة حياة كريمة</div>
+            <h3>"Hayah Karima" National Initiative Dashboard</h3>
+            <p>Monitoring 40 service and agricultural cluster projects, tracking delivery and operational status by sector.</p>
+            <div class="proj-stat">40<span>Projects</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--gold)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <div class="proj-ar">توزيع الحرف اليدوية والورش الحرفية</div>
+            <h3>Handicrafts &amp; Workshops Distribution Dashboard</h3>
+            <p>Analyzing 13 craft categories and 3,324 workers across licensed and unlicensed workshops.</p>
+            <div class="proj-stat">3,324<span>Workers Tracked</span></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="tabpanel" id="tab-biz">
+        <article class="proj-card" style="--accent:var(--clay)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <h3>Real Estate Lead Conversion &amp; Pipeline Efficiency</h3>
+            <p>A 4-page Power BI dashboard identifying a conversion rate below industry benchmark and EGP 1.37M in annual lost commission, with recovery recommendations.</p>
+            <div class="proj-stat">1.37M<span>EGP Recoverable</span></div>
+          </div>
+        </article>
+
+        <article class="proj-card" style="--accent:var(--teal)">
+          <div class="tab-strip"></div>
+          <div class="proj-inner">
+            <h3>Marketing Campaign Performance Dashboard</h3>
+            <p>Tracking cost, clicks, impressions, CTR, and revenue across 6 campaigns on monthly and quarterly bases to support budget decisions.</p>
+            <div class="proj-stat">6<span>Campaigns Tracked</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag">04 — Gallery</span>
+        <h2>Dashboards in view.</h2>
+        <p>Each card can hold several pages of the same dashboard — use the arrows to browse. See "Adding your screenshots" in the setup guide for filenames.</p>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"><!-- populated by script below --></div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag">05 — Skills</span>
+        <h2>Tools of the trade.</h2>
+      </div>
+      <div class="skill-groups">
+        <div class="skill-group">
+          <h4>GIS &amp; Mapping</h4>
+          <div class="chip-row">
+            <span class="chip">QGIS</span><span class="chip">ArcGIS</span><span class="chip">Google Earth</span><span class="chip">Leaflet</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Data &amp; Reporting</h4>
+          <div class="chip-row">
+            <span class="chip">Power BI</span><span class="chip">Microsoft Access</span><span class="chip">Power Query</span><span class="chip">DAX</span><span class="chip">Excel</span><span class="chip">Word</span><span class="chip">PowerPoint</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div>
+          <span class="sec-tag">06 — Contact</span>
+          <h2>Let's talk about your data.</h2>
+          <p style="color:var(--text-dim); max-width:440px;">Open to GIS analysis, data analysis, and urban-planning support roles — remote or on-site.</p>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:mayada91almahdy@gmail.com">Email <span class="arrow">→</span></a>
+          <a href="https://www.linkedin.com/in/mayada-al-mahdy-92aab1220/" target="_blank" rel="noopener">LinkedIn <span class="arrow">→</span></a>
+          <a href="https://www.freelancer.com/u/Mayada91lmahdy" target="_blank" rel="noopener">Freelancer <span class="arrow">→</span></a>
+          <a href="https://khamsat.com/user/mayada_almahdy" target="_blank" rel="noopener">Khamsat <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Mayada Amgad Al-Mahdy</span>
+        <span>Monufia, Egypt</span>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+  // mobile nav
+  const navToggle = document.getElementById('navToggle');
+  const navlinks = document.getElementById('navlinks');
+  navToggle.addEventListener('click', () => {
+    const open = navlinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+  });
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navlinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', false);
+  }));
+
+  // project tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+      document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+  // ===== GALLERY DATA — edit titles/captions/image counts here =====
+  // "count" = how many numbered screenshots this project has.
+  // Files must be named exactly: images/<base>-1.png, images/<base>-2.png, etc.
+  // If a project has only 1 screenshot, name it images/<base>-1.png (still with the -1).
+  const galleryData = [
+    { base:"project-variables-exec", count:6, title:"Building Variables Tracking System (Executive)", cap:"30,684 variables · legalization KPIs · 6 pages" },
+    { base:"project-landuse",        count:1, title:"Land-Use Classification",   cap:"118 records, donut breakdown" },
+    { base:"project-azhari",         count:1, title:"Azhari Institutes",         cap:"600 institutes, stage & gender split" },
+    { base:"project-parking",        count:1, title:"Public Parking",            cap:"29 locations, satellite map" },
+    { base:"project-water",          count:1, title:"Water Treatment",           cap:"26 stations, capacity vs. actual" },
+    { base:"project-labor",          count:1, title:"Labor Force Offices",        cap:"43 offices, operational status" },
+    { base:"project-heritage",       count:1, title:"Heritage Sites",             cap:"7 registered buildings" },
+    { base:"project-hayah-karima",   count:1, title:"Hayah Karima Initiative",    cap:"40 rural-development projects" },
+    { base:"project-handicrafts",    count:1, title:"Handicrafts & Workshops",    cap:"3,324 workers tracked" },
+    { base:"project-realestate",     count:4, title:"Real Estate Pipeline",       cap:"Lead conversion & ROI analysis · 4 pages" },
+    { base:"project-marketing",      count:1, title:"Marketing Performance",      cap:"6 campaigns, cost vs. revenue" },
+  ];
+
+  const grid = document.getElementById('galleryGrid');
+  galleryData.forEach((proj, idx) => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+
+    const dotsHtml = proj.count > 1
+      ? `<div class="car-dots">${Array.from({length:proj.count}).map((_,i)=>`<span class="dot${i===0?' active':''}" data-i="${i}"></span>`).join('')}</div>`
+      : '';
+    const navHtml = proj.count > 1
+      ? `<button class="car-btn car-prev" aria-label="Previous screenshot">‹</button><button class="car-btn car-next" aria-label="Next screenshot">›</button><span class="car-page-count">1/${proj.count}</span>`
+      : '';
+
+    item.innerHTML = `
+      <div class="shot" data-idx="0">
+        <img src="images/${proj.base}-1.png" alt="${proj.title} screenshot 1"
+             onerror="this.parentElement.classList.add('img-missing'); this.replaceWith(Object.assign(document.createElement('span'), {textContent:'▦ images/${proj.base}-1.png'}));">
+        ${navHtml}
+        ${dotsHtml}
+      </div>
+      <div class="cap"><strong>${proj.title}</strong>${proj.cap}</div>
+    `;
+    grid.appendChild(item);
+
+    if (proj.count > 1) {
+      const shot = item.querySelector('.shot');
+      const pageCount = item.querySelector('.car-page-count');
+      const dots = [...item.querySelectorAll('.dot')];
+      let current = 0;
+      const show = (i) => {
+        current = (i + proj.count) % proj.count;
+        const img = shot.querySelector('img') || document.createElement('img');
+        img.src = `images/${proj.base}-${current+1}.png`;
+        img.alt = `${proj.title} screenshot ${current+1}`;
+        if (!shot.contains(img)) shot.prepend(img);
+        pageCount.textContent = `${current+1}/${proj.count}`;
+        dots.forEach((d,di)=>d.classList.toggle('active', di===current));
+      };
+      item.querySelector('.car-prev').addEventListener('click', ()=>show(current-1));
+      item.querySelector('.car-next').addEventListener('click', ()=>show(current+1));
+      dots.forEach(d => d.addEventListener('click', ()=>show(+d.dataset.i)));
+    }
+  });
+</script>
+</body>
+</html>
