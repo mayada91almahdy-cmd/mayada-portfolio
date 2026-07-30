@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mayada Amgad Al-Mahdy — GIS Specialist &amp; Data Analyst</title>
+<meta name="description" content="GIS Specialist &amp; Data Analyst building interactive Power BI dashboards for urban planning, civic infrastructure, and business intelligence in Monufia Governorate, Egypt.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mayada Amgad Al-Mahdy — GIS Specialist &amp; Data Analyst">
+<meta property="og:description" content="11 Power BI / GIS dashboards spanning civic infrastructure, national development initiatives, and business intelligence.">
+<meta property="og:image" content="images/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mayada Amgad Al-Mahdy — GIS Specialist &amp; Data Analyst">
+<meta name="twitter:description" content="11 Power BI / GIS dashboards spanning civic infrastructure, national development initiatives, and business intelligence.">
+<meta name="twitter:image" content="images/og-cover.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -47,14 +56,44 @@
 
   /* background grid texture */
   .grid-bg{
-    position:fixed; inset:0; z-index:-1;
+    position:fixed; inset:-2px; z-index:-1;
     background-image:
       linear-gradient(var(--line) 1px, transparent 1px),
       linear-gradient(90deg, var(--line) 1px, transparent 1px);
     background-size:64px 64px;
     opacity:.25;
     mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 75%);
+    animation: drift 40s linear infinite;
   }
+  @keyframes drift{
+    0%{background-position:0 0, 0 0;}
+    100%{background-position:64px 128px, 128px 64px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .grid-bg{animation:none;}
+  }
+
+  /* scroll-reveal */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+  }
+
+  /* back to top */
+  #toTop{
+    position:fixed; right:22px; bottom:22px; z-index:60;
+    width:44px; height:44px; border-radius:50%;
+    background:var(--gold); color:#12181F; border:none; cursor:pointer;
+    font-size:18px; display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transform:translateY(10px);
+    transition:opacity .2s, transform .2s;
+    box-shadow:0 4px 14px rgba(0,0,0,.35);
+  }
+  #toTop.show{opacity:1; pointer-events:auto; transform:translateY(0);}
+
+  /* scroll-spy nav state */
+  .navlinks a.current{color:var(--gold); border-color:var(--gold);}
 
   /* ===== NAV ===== */
   header{
@@ -65,8 +104,10 @@
   }
   nav.wrap{
     display:flex; align-items:center; justify-content:space-between;
-    height:64px;
+    height:64px; gap:20px;
   }
+  #navCvBtn{white-space:nowrap;}
+  @media (max-width:520px){ #navCvBtn{display:none;} }
   .brand{font-weight:600; letter-spacing:.02em; font-size:15px;}
   .brand span{color:var(--gold);}
   .navlinks{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
@@ -259,6 +300,22 @@
     background:rgba(14,22,32,.7); border:1px solid var(--line); border-radius:12px; padding:2px 9px;
   }
 
+  /* ===== CERTIFICATIONS ===== */
+  .cert-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:900px){.cert-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:600px){.cert-grid{grid-template-columns:1fr;}}
+  .cert-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 22px; transition:border-color .15s, transform .15s;
+  }
+  .cert-card:hover{border-color:var(--teal); transform:translateY(-2px);}
+  .cert-issuer{
+    display:block; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    color:var(--teal); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;
+  }
+  .cert-card h3{font-size:15px; margin:0 0 10px; line-height:1.35;}
+  .cert-date{display:block; font-size:12.5px; color:var(--text-dim);}
+
   /* ===== SKILLS ===== */
   .skill-groups{display:grid; grid-template-columns:repeat(2,1fr); gap:32px;}
   @media (max-width:700px){.skill-groups{grid-template-columns:1fr;}}
@@ -309,9 +366,11 @@
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#certifications">Certifications</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <a class="btn btn-ghost" id="navCvBtn" href="Mayada_Amgad_CV.pdf" download style="padding:9px 16px; font-size:12.5px;">Download CV</a>
     <button class="navtoggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
   </nav>
 </header>
@@ -410,8 +469,8 @@
           <div class="proj-inner">
             <div class="proj-ar">الخريطة التفاعلية لتصنيف استخدامات الأراضي</div>
             <h3>Interactive Land-Use Classification Map</h3>
-            <p>Classifying 118 land-use records — residential, commercial, administrative, service, vacant — for a Monufia district, combined with a population-census data layer.</p>
-            <div class="proj-stat">118<span>Records Mapped</span></div>
+            <p>Classifying 4,399 land-use and demographic records across Monufia Governorate — 59.5% residential, 6.4% commercial, plus administrative, service, and vacant-land categories — combined with a population-census layer showing per-city totals.</p>
+            <div class="proj-stat">4,399<span>Records Mapped</span></div>
           </div>
         </article>
 
@@ -520,6 +579,74 @@
     </div>
   </section>
 
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag">05 — Certifications</span>
+        <h2>Training &amp; credentials.</h2>
+        <p>GIS, data analysis, and business-intelligence certificates alongside a Surveying Engineering degree.</p>
+      </div>
+      <div class="cert-grid">
+
+        <div class="cert-card">
+          <span class="cert-issuer">Benha University — Shoubra Faculty of Engineering</span>
+          <h3>B.Sc. in Surveying Engineering</h3>
+          <span class="cert-date">Graduated May 2013 · Grade: Good (Graduation Project: Very Good)</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">IBSRA</span>
+          <h3>Data Analysis &amp; Business Intelligence Development</h3>
+          <span class="cert-date">3-month intensive program · Issued May 2026</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">Esri Northeast Africa (Esri NeA)</span>
+          <h3>Field Data Collection and Management Using ArcGIS</h3>
+          <span class="cert-date">Nov 2020</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">Esri Northeast Africa (Esri NeA)</span>
+          <h3>Migrating from ArcMap to ArcGIS Pro</h3>
+          <span class="cert-date">Nov 2020</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">EYouth Business</span>
+          <h3>Data Analysis · Excel · Power BI · Data Analysis Awareness</h3>
+          <span class="cert-date">Certificate series</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">ITIDA (ITIDA Gigs) &amp; eYouth</span>
+          <h3>Freelance Training Program</h3>
+          <span class="cert-date">3-month program</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">Military Survey Authority (ENSDI)</span>
+          <h3>Certificate of Appreciation — Training Course Participation</h3>
+          <span class="cert-date">2021</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">Menoufia Engineers Syndicate</span>
+          <h3>3D MAX Course</h3>
+          <span class="cert-date">48 hours · Jun–Jul 2014</span>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-issuer">YAT Learning Solutions</span>
+          <h3>Mastering AutoCAD 2014 For Engineers</h3>
+          <span class="cert-date">60 hours · Dec 2014</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- SKILLS -->
   <section id="skills">
     <div class="wrap">
@@ -568,6 +695,8 @@
   </footer>
 </main>
 
+<button id="toTop" aria-label="Back to top">↑</button>
+
 <script>
   // mobile nav
   const navToggle = document.getElementById('navToggle');
@@ -597,7 +726,7 @@
   // If a project has only 1 screenshot, name it images/<base>-1.png (still with the -1).
   const galleryData = [
     { base:"project-variables-exec", count:6, title:"Building Variables Tracking System (Executive)", cap:"30,684 variables · legalization KPIs · 6 pages" },
-    { base:"project-landuse",        count:1, title:"Land-Use Classification",   cap:"118 records, donut breakdown" },
+    { base:"project-landuse",        count:1, title:"Land-Use Classification",   cap:"4,399 records, governorate-wide" },
     { base:"project-azhari",         count:1, title:"Azhari Institutes",         cap:"600 institutes, stage & gender split" },
     { base:"project-parking",        count:1, title:"Public Parking",            cap:"29 locations, satellite map" },
     { base:"project-water",          count:1, title:"Water Treatment",           cap:"26 stations, capacity vs. actual" },
@@ -651,6 +780,39 @@
       dots.forEach(d => d.addEventListener('click', ()=>show(+d.dataset.i)));
     }
   });
+  // back to top
+  const toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', () => {
+    toTop.classList.toggle('show', window.scrollY > 480);
+  });
+  toTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+  // scroll reveal
+  document.querySelectorAll('.sec-head, .proj-card, .gallery-item, .cert-card, .exp-card, .profile-card')
+    .forEach(el => el.classList.add('reveal'));
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // scroll-spy nav
+  const spySections = ['about','experience','projects','gallery','certifications','skills','contact']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  const spyLinks = [...document.querySelectorAll('.navlinks a')];
+  const spyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        spyLinks.forEach(a => a.classList.toggle('current', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+  spySections.forEach(sec => spyObserver.observe(sec));
 </script>
 </body>
 </html>
