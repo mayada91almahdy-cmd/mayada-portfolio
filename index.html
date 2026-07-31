@@ -13,6 +13,7 @@
 <meta name="twitter:title" content="Mayada Amgad Al-Mahdy — GIS Specialist &amp; Data Analyst">
 <meta name="twitter:description" content="11 Power BI / GIS dashboards spanning civic infrastructure, national development initiatives, and business intelligence.">
 <meta name="twitter:image" content="images/og-cover.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230E1620'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' fill='%23C9963F' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -256,6 +257,23 @@
     font-family:'IBM Plex Mono',monospace; color:var(--accent,var(--gold)); font-size:1.3rem; font-weight:600;
   }
   .proj-stat span{font-size:11px; font-family:'Inter',sans-serif; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em;}
+  .proj-stack{
+    margin-top:10px; padding-top:10px; border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:.01em;
+  }
+
+  /* case-study expand toggle */
+  .case-toggle{margin-top:14px;}
+  .case-toggle summary{
+    list-style:none; cursor:pointer; font-size:12px; color:var(--gold);
+    font-family:'IBM Plex Mono',monospace; display:flex; align-items:center; gap:6px;
+  }
+  .case-toggle summary::-webkit-details-marker{display:none;}
+  .case-toggle summary::before{content:"▸"; transition:transform .15s;}
+  .case-toggle[open] summary::before{transform:rotate(90deg);}
+  .case-body{margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
+  .case-body p{margin:0 0 10px; font-size:12.5px; line-height:1.6; color:var(--text-dim);}
+  .case-body p strong{color:var(--text); display:block; font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; font-family:'IBM Plex Mono',monospace;}
 
   /* ===== GALLERY ===== */
   .gallery-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
@@ -307,14 +325,48 @@
   .cert-card{
     background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
     padding:20px 22px; transition:border-color .15s, transform .15s;
+    cursor:pointer;
   }
-  .cert-card:hover{border-color:var(--teal); transform:translateY(-2px);}
+  .cert-card:hover, .cert-card:focus-visible{border-color:var(--teal); transform:translateY(-2px);}
   .cert-issuer{
     display:block; font-family:'IBM Plex Mono',monospace; font-size:11px;
     color:var(--teal); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;
   }
   .cert-card h3{font-size:15px; margin:0 0 10px; line-height:1.35;}
   .cert-date{display:block; font-size:12.5px; color:var(--text-dim);}
+  .cert-view{
+    display:inline-block; margin-top:14px; font-size:12px; color:var(--gold);
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  /* lightbox */
+  .lightbox{
+    position:fixed; inset:0; z-index:100; background:rgba(10,14,18,.92);
+    display:none; align-items:center; justify-content:center; padding:40px;
+  }
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:min(900px,90vw); max-height:85vh; border-radius:4px; border:1px solid var(--line); box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  .lightbox-close{
+    position:absolute; top:24px; right:28px; width:40px; height:40px; border-radius:50%;
+    background:var(--panel); border:1px solid var(--line); color:var(--text); font-size:16px; cursor:pointer;
+  }
+  .lightbox-close:hover{border-color:var(--gold); color:var(--gold);}
+
+  /* ===== TESTIMONIAL ===== */
+  .testimonial-card{
+    background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--gold);
+    border-radius:var(--radius); padding:32px 36px; max-width:760px; margin:0;
+  }
+  .testimonial-card p{
+    color:var(--text-dim); font-size:15px; line-height:1.7; margin:0 0 16px;
+  }
+  .testimonial-card p:first-of-type::before{content:"\201C"; color:var(--gold); font-size:1.2em;}
+  .testimonial-card footer{
+    margin-top:20px; padding-top:16px; border-top:1px solid var(--line);
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .testimonial-card footer strong{color:var(--text); font-size:14.5px;}
+  .testimonial-card footer span{color:var(--teal); font-size:12.5px; font-family:'IBM Plex Mono',monospace;}
 
   /* ===== SKILLS ===== */
   .skill-groups{display:grid; grid-template-columns:repeat(2,1fr); gap:32px;}
@@ -331,6 +383,8 @@
   .contact-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:40px; align-items:end; margin-bottom:56px;}
   @media (max-width:760px){.contact-grid{grid-template-columns:1fr;}}
   .contact-grid h2{font-size:clamp(1.8rem,4vw,2.6rem); margin:0 0 16px;}
+  .contact-meta{display:flex; flex-direction:column; gap:8px; margin-top:20px;}
+  .contact-meta span{font-size:13px; color:var(--text-dim); font-family:'IBM Plex Mono',monospace;}
   .contact-links{display:flex; flex-direction:column; gap:10px;}
   .contact-links a{
     text-decoration:none; color:var(--text); font-size:15px; padding:12px 16px;
@@ -339,6 +393,21 @@
   }
   .contact-links a:hover{border-color:var(--gold); background:var(--gold-soft);}
   .contact-links a .arrow{color:var(--gold);}
+  .email-row{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--line); border-radius:var(--radius); padding:12px 16px;
+  }
+  .email-text{
+    text-decoration:none; color:var(--text); font-size:15px; flex:1;
+    border:none; padding:0; font-family:'IBM Plex Mono',monospace;
+  }
+  .copy-btn{
+    background:var(--panel); border:1px solid var(--line); color:var(--text-dim);
+    font-size:12.5px; padding:7px 12px; border-radius:var(--radius); cursor:pointer;
+    font-family:'Inter',sans-serif; white-space:nowrap; transition:border-color .15s, color .15s;
+  }
+  .copy-btn:hover{border-color:var(--gold); color:var(--gold);}
+  .copy-btn.copied{border-color:var(--teal); color:var(--teal);}
   .footer-bottom{
     border-top:1px solid var(--line); padding-top:24px;
     display:flex; justify-content:space-between; color:var(--text-dim); font-size:12.5px; flex-wrap:wrap; gap:8px;
@@ -367,6 +436,7 @@
       <li><a href="#projects">Projects</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#testimonials">Testimonial</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -382,8 +452,8 @@
     <h1>Turning governorate-scale data into <em>maps people can act on</em>.</h1>
     <p class="lede">GIS Specialist &amp; Data Analyst building interactive Power BI dashboards for urban planning, civic infrastructure, and business intelligence — from a 116,682-record violations database to real estate pipeline analytics.</p>
     <div class="cta-row">
-      <a href="#projects" class="btn btn-primary">View Dashboards</a>
-      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      <a href="#projects" class="btn btn-primary">Explore Projects</a>
+      <a href="#contact" class="btn btn-ghost">Let's Work Together</a>
     </div>
     <div class="readout">
       <div class="cell"><span class="num">11</span><span class="lbl">Dashboards Built</span></div>
@@ -461,6 +531,15 @@
             <h3>Building Variables Tracking System — Executive Dashboard</h3>
             <p>A 5-page executive Power BI system (2025–2026) tracking 30,684 building variables across Monufia's centers, with legalization-progress KPIs (completion rate toward target, licenses issued, lagging centers) and a full breakdown by reconciliation (تصالح) stage.</p>
             <div class="proj-stat">30,684<span>Variables Tracked</span></div>
+            <div class="proj-stack">Power BI · DAX · Power Query · Access</div>
+            <details class="case-toggle">
+              <summary>Problem → Solution → Impact</summary>
+              <div class="case-body">
+                <p><strong>Challenge</strong>Legalization status for tens of thousands of building cases was scattered across separate reconciliation-stage records, making it hard for decision-makers to see progress at a glance.</p>
+                <p><strong>Solution</strong>Built a 5-page executive Power BI system consolidating every case into one model, with KPIs for completion rate, licenses issued, and lagging centers.</p>
+                <p><strong>Impact</strong>Gave leadership a single, filterable view of legalization progress by center and stage — replacing manual cross-checking with instant drill-down.</p>
+              </div>
+            </details>
           </div>
         </article>
 
@@ -471,6 +550,15 @@
             <h3>Interactive Land-Use Classification Map</h3>
             <p>Classifying 4,399 land-use and demographic records across Monufia Governorate — 59.5% residential, 6.4% commercial, plus administrative, service, and vacant-land categories — combined with a population-census layer showing per-city totals.</p>
             <div class="proj-stat">4,399<span>Records Mapped</span></div>
+            <div class="proj-stack">Power BI · GIS · Leaflet · Access</div>
+            <details class="case-toggle">
+              <summary>Problem → Solution → Impact</summary>
+              <div class="case-body">
+                <p><strong>Challenge</strong>Land-use and population data for the governorate lived in disconnected spreadsheets, making it slow to answer basic zoning or planning questions.</p>
+                <p><strong>Solution</strong>Built an interactive GIS map classifying 4,399 records by land-use type, layered with population-census figures per city.</p>
+                <p><strong>Impact</strong>Planners can now filter by center, village, or شياخة and see land-use mix and population data together on one map, instead of cross-referencing separate files.</p>
+              </div>
+            </details>
           </div>
         </article>
 
@@ -481,6 +569,7 @@
             <h3>Azhari Institutes Dashboard</h3>
             <p>Mapping 600 Azhari educational institutes by stage, shift, type, and gender distribution, with per-institute student and teacher counts.</p>
             <div class="proj-stat">600<span>Institutes</span></div>
+            <div class="proj-stack">Power BI · GIS · Excel</div>
           </div>
         </article>
 
@@ -491,6 +580,7 @@
             <h3>Public Parking Facilities Dashboard</h3>
             <p>Mapping 29 public parking locations with satellite-based geolocation, operational-status tracking, and dynamic filtering.</p>
             <div class="proj-stat">29<span>Locations</span></div>
+            <div class="proj-stack">Power BI · GIS · Leaflet</div>
           </div>
         </article>
 
@@ -501,6 +591,7 @@
             <h3>Water Treatment Stations Dashboard</h3>
             <p>Covering 26 treatment stations, comparing design vs. actual capacity and mapping service-area coverage.</p>
             <div class="proj-stat">26<span>Stations</span></div>
+            <div class="proj-stack">Power BI · GIS</div>
           </div>
         </article>
 
@@ -511,6 +602,7 @@
             <h3>Labor Force Offices Dashboard</h3>
             <p>Tracking 43 labor offices governorate-wide, monitoring operational status and office-type distribution.</p>
             <div class="proj-stat">43<span>Offices</span></div>
+            <div class="proj-stack">Power BI · Excel</div>
           </div>
         </article>
 
@@ -521,6 +613,7 @@
             <h3>Heritage &amp; Archaeological Sites Dashboard</h3>
             <p>Mapping 7 registered heritage buildings with legal registration data and geographic distribution.</p>
             <div class="proj-stat">7<span>Heritage Sites</span></div>
+            <div class="proj-stack">Power BI · GIS</div>
           </div>
         </article>
 
@@ -531,6 +624,7 @@
             <h3>"Hayah Karima" National Initiative Dashboard</h3>
             <p>Monitoring 40 service and agricultural cluster projects, tracking delivery and operational status by sector.</p>
             <div class="proj-stat">40<span>Projects</span></div>
+            <div class="proj-stack">Power BI · GIS · Excel</div>
           </div>
         </article>
 
@@ -541,6 +635,7 @@
             <h3>Handicrafts &amp; Workshops Distribution Dashboard</h3>
             <p>Analyzing 13 craft categories and 3,324 workers across licensed and unlicensed workshops.</p>
             <div class="proj-stat">3,324<span>Workers Tracked</span></div>
+            <div class="proj-stack">Power BI · Excel</div>
           </div>
         </article>
       </div>
@@ -552,6 +647,15 @@
             <h3>Real Estate Lead Conversion &amp; Pipeline Efficiency</h3>
             <p>A 4-page Power BI dashboard identifying a conversion rate below industry benchmark and EGP 1.37M in annual lost commission, with recovery recommendations.</p>
             <div class="proj-stat">1.37M<span>EGP Recoverable</span></div>
+            <div class="proj-stack">Power BI · DAX · Excel</div>
+            <details class="case-toggle">
+              <summary>Problem → Solution → Impact</summary>
+              <div class="case-body">
+                <p><strong>Challenge</strong>Leads were being lost across the sales pipeline with no visibility into which channels or agents were underperforming.</p>
+                <p><strong>Solution</strong>Built a 4-page dashboard tracking conversion rate against industry benchmark, channel spend vs. contracts, and close rate by agent.</p>
+                <p><strong>Impact</strong>Surfaced EGP 1.37M in annual lost commission and identified zero-ROI channels, with concrete recommendations projecting a strong return on the proposed fix.</p>
+              </div>
+            </details>
           </div>
         </article>
 
@@ -561,6 +665,7 @@
             <h3>Marketing Campaign Performance Dashboard</h3>
             <p>Tracking cost, clicks, impressions, CTR, and revenue across 6 campaigns on monthly and quarterly bases to support budget decisions.</p>
             <div class="proj-stat">6<span>Campaigns Tracked</span></div>
+            <div class="proj-stack">Power BI · Excel</div>
           </div>
         </article>
       </div>
@@ -589,69 +694,123 @@
       </div>
       <div class="cert-grid">
 
-        <div class="cert-card">
+        <div class="cert-card" style="cursor:default;">
           <span class="cert-issuer">Benha University — Shoubra Faculty of Engineering</span>
           <h3>B.Sc. in Surveying Engineering</h3>
           <span class="cert-date">Graduated May 2013 · Grade: Good (Graduation Project: Very Good)</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-ibsra.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">IBSRA</span>
           <h3>Data Analysis &amp; Business Intelligence Development</h3>
           <span class="cert-date">3-month intensive program · Issued May 2026</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-esri-fielddata.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">Esri Northeast Africa (Esri NeA)</span>
           <h3>Field Data Collection and Management Using ArcGIS</h3>
           <span class="cert-date">Nov 2020</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-esri-arcgispro.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">Esri Northeast Africa (Esri NeA)</span>
           <h3>Migrating from ArcMap to ArcGIS Pro</h3>
           <span class="cert-date">Nov 2020</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-eyouth-dataanalysis.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">EYouth Business</span>
-          <h3>Data Analysis · Excel · Power BI · Data Analysis Awareness</h3>
-          <span class="cert-date">Certificate series</span>
+          <h3>Data Analysis</h3>
+          <span class="cert-date">Certificate of Completion</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-eyouth-excel.jpg" tabindex="0" role="button" aria-label="View certificate image">
+          <span class="cert-issuer">EYouth Business</span>
+          <h3>Data Analysis Using Excel</h3>
+          <span class="cert-date">Certificate of Completion</span>
+          <span class="cert-view">🔍 View certificate</span>
+        </div>
+
+        <div class="cert-card" data-img="images/cert-eyouth-awareness.jpg" tabindex="0" role="button" aria-label="View certificate image">
+          <span class="cert-issuer">EYouth Business</span>
+          <h3>Data Analysis Awareness</h3>
+          <span class="cert-date">Certificate of Completion</span>
+          <span class="cert-view">🔍 View certificate</span>
+        </div>
+
+        <div class="cert-card" data-img="images/cert-eyouth-powerbi.jpg" tabindex="0" role="button" aria-label="View certificate image">
+          <span class="cert-issuer">EYouth Business</span>
+          <h3>Data Analysis Using Power BI</h3>
+          <span class="cert-date">Certificate of Completion</span>
+          <span class="cert-view">🔍 View certificate</span>
+        </div>
+
+        <div class="cert-card" data-img="images/cert-itida.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">ITIDA (ITIDA Gigs) &amp; eYouth</span>
           <h3>Freelance Training Program</h3>
           <span class="cert-date">3-month program</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-ensdi.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">Military Survey Authority (ENSDI)</span>
           <h3>Certificate of Appreciation — Training Course Participation</h3>
           <span class="cert-date">2021</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-3dmax.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">Menoufia Engineers Syndicate</span>
           <h3>3D MAX Course</h3>
           <span class="cert-date">48 hours · Jun–Jul 2014</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
-        <div class="cert-card">
+        <div class="cert-card" data-img="images/cert-autocad.jpg" tabindex="0" role="button" aria-label="View certificate image">
           <span class="cert-issuer">YAT Learning Solutions</span>
           <h3>Mastering AutoCAD 2014 For Engineers</h3>
           <span class="cert-date">60 hours · Dec 2014</span>
+          <span class="cert-view">🔍 View certificate</span>
         </div>
 
       </div>
     </div>
   </section>
 
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag">06 — Testimonial</span>
+        <h2>LinkedIn recommendation.</h2>
+      </div>
+      <blockquote class="testimonial-card">
+        <p>"Eng. Mayada Al-Mahdy completed IBSRA's Data Analysis and BI Training program under my supervision. She was technically solid and applied it to real case studies, not just coursework. She also gained introductory exposure to the business side, particularly in Real Estate and e-commerce.</p>
+        <p>What stood out beyond the technical side — she is versatile and remarkably resilient. Disciplined and dependable.</p>
+        <p>I'd put her forward for a Junior Data Analyst or BI role without hesitation."</p>
+        <footer>
+          <strong>Sameh Albadry</strong>
+          <span>Founder &amp; CEO, IBSRA</span>
+        </footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button id="lightboxClose" class="lightbox-close" aria-label="Close">✕</button>
+    <img id="lightboxImg" src="" alt="Certificate preview">
+  </div>
+
   <!-- SKILLS -->
   <section id="skills">
     <div class="wrap">
       <div class="sec-head">
-        <span class="sec-tag">05 — Skills</span>
+        <span class="sec-tag">07 — Skills</span>
         <h2>Tools of the trade.</h2>
       </div>
       <div class="skill-groups">
@@ -676,12 +835,20 @@
     <div class="wrap">
       <div class="contact-grid">
         <div>
-          <span class="sec-tag">06 — Contact</span>
-          <h2>Let's talk about your data.</h2>
-          <p style="color:var(--text-dim); max-width:440px;">Open to GIS analysis, data analysis, and urban-planning support roles — remote or on-site.</p>
+          <span class="sec-tag">08 — Contact</span>
+          <h2>Let's work together.</h2>
+          <p style="color:var(--text-dim); max-width:440px;">Open to GIS analysis, data analysis, and urban-planning support roles.</p>
+          <div class="contact-meta">
+            <span>📍 Monufia, Egypt</span>
+            <span>🌐 Remote &amp; on-site</span>
+            <span>💬 Arabic (native) · English (professional)</span>
+          </div>
         </div>
         <div class="contact-links">
-          <a href="mailto:mayada91almahdy@gmail.com">Email <span class="arrow">→</span></a>
+          <div class="email-row">
+            <a href="mailto:mayada91almahdy@gmail.com" class="email-text">mayada91almahdy@gmail.com</a>
+            <button id="copyEmailBtn" class="copy-btn" type="button" aria-label="Copy email address">📋 Copy</button>
+          </div>
           <a href="https://www.linkedin.com/in/mayada-al-mahdy-92aab1220/" target="_blank" rel="noopener">LinkedIn <span class="arrow">→</span></a>
           <a href="https://www.freelancer.com/u/Mayada91lmahdy" target="_blank" rel="noopener">Freelancer <span class="arrow">→</span></a>
           <a href="https://khamsat.com/user/mayada_almahdy" target="_blank" rel="noopener">Khamsat <span class="arrow">→</span></a>
@@ -752,7 +919,7 @@
 
     item.innerHTML = `
       <div class="shot" data-idx="0">
-        <img src="images/${proj.base}-1.png" alt="${proj.title} screenshot 1"
+        <img src="images/${proj.base}-1.png" alt="${proj.title} screenshot 1" loading="lazy"
              onerror="this.parentElement.classList.add('img-missing'); this.replaceWith(Object.assign(document.createElement('span'), {textContent:'▦ images/${proj.base}-1.png'}));">
         ${navHtml}
         ${dotsHtml}
@@ -813,6 +980,46 @@
     });
   }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
   spySections.forEach(sec => spyObserver.observe(sec));
+  // certificate lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const openLightbox = (src, alt) => {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+  };
+  const closeLightbox = () => {
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImg.src = '';
+  };
+  document.querySelectorAll('.cert-card[data-img]').forEach(card => {
+    const src = card.dataset.img;
+    const title = card.querySelector('h3')?.textContent || 'Certificate';
+    card.addEventListener('click', () => openLightbox(src, title));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(src, title); }
+    });
+  });
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+  // copy email
+  const copyBtn = document.getElementById('copyEmailBtn');
+  copyBtn.addEventListener('click', async () => {
+    const email = 'mayada91almahdy@gmail.com';
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch (err) {
+      const tmp = document.createElement('textarea');
+      tmp.value = email; document.body.appendChild(tmp); tmp.select();
+      document.execCommand('copy'); document.body.removeChild(tmp);
+    }
+    copyBtn.textContent = '✓ Copied';
+    copyBtn.classList.add('copied');
+    setTimeout(() => { copyBtn.textContent = '📋 Copy'; copyBtn.classList.remove('copied'); }, 2000);
+  });
 </script>
 </body>
 </html>
