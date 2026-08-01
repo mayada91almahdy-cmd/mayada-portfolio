@@ -130,6 +130,15 @@
     color:var(--gold); text-transform:uppercase; margin-bottom:22px;
   }
   .eyebrow::before{content:"◎"; font-size:13px;}
+  .avail-badge{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:12px; color:var(--text-dim); border:1px solid var(--line); border-radius:20px;
+    padding:6px 14px; margin:0 0 20px 14px;
+  }
+  .avail-badge .dot{
+    width:7px; height:7px; border-radius:50%; background:var(--sage);
+    box-shadow:0 0 0 3px rgba(111,156,92,.18);
+  }
   .hero h1{
     font-size:clamp(2.4rem, 5vw, 4rem);
     line-height:1.05; margin:0 0 18px; font-weight:700; letter-spacing:-.01em;
@@ -274,6 +283,12 @@
   .case-body{margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
   .case-body p{margin:0 0 10px; font-size:12.5px; line-height:1.6; color:var(--text-dim);}
   .case-body p strong{color:var(--text); display:block; font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; font-family:'IBM Plex Mono',monospace;}
+  .letter-view-btn{
+    margin-top:6px; background:var(--panel); border:1px solid var(--line); color:var(--gold);
+    font-size:12px; padding:9px 16px; border-radius:var(--radius); cursor:pointer;
+    font-family:'IBM Plex Mono',monospace; transition:border-color .15s;
+  }
+  .letter-view-btn:hover{border-color:var(--gold);}
 
   /* ===== GALLERY ===== */
   .gallery-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
@@ -289,7 +304,9 @@
     border-bottom:1px solid var(--line);
     position:relative;
   }
-  .gallery-item .shot img{width:100%; height:100%; object-fit:cover;}
+  .gallery-item .shot img{width:100%; height:100%; object-fit:cover; transition:transform .35s ease;}
+  .gallery-item:hover .shot img{transform:scale(1.05);}
+  .gallery-item .shot{overflow:hidden;}
   .gallery-item .cap{padding:12px 16px; font-size:13px; color:var(--text-dim);}
   .gallery-item .cap strong{color:var(--text); display:block; margin-bottom:2px; font-size:13.5px;}
 
@@ -449,6 +466,7 @@
   <!-- HERO -->
   <section class="hero wrap">
     <span class="eyebrow">30.5° N, 30.9° E — Monufia Governorate, Egypt</span>
+    <span class="avail-badge"><span class="dot"></span>Open to Work — Remote &amp; Freelance</span>
     <h1>Turning governorate-scale data into <em>maps people can act on</em>.</h1>
     <p class="lede">GIS Specialist &amp; Data Analyst building interactive Power BI dashboards for urban planning, civic infrastructure, and business intelligence — from a 116,682-record violations database to real estate pipeline analytics.</p>
     <div class="cta-row">
@@ -796,6 +814,19 @@
           <strong>Sameh Albadry</strong>
           <span>Founder &amp; CEO, IBSRA</span>
         </footer>
+        <details class="case-toggle">
+          <summary>Read full recommendation letter</summary>
+          <div class="case-body">
+            <p>To Whom It May Concern,</p>
+            <p>I am writing to recommend Mayada Amgad Abdelazim Almahdy, who successfully completed a three-month training program at IBSRA in Data Analysis and Business Intelligence Development.</p>
+            <p>During the program, Mayada gained hands-on proficiency in key industry tools including Statistics Fundamentals, SQL for Data Analysis Fundamentals, Microsoft Excel Essentials, Power BI Advanced, and Python Essentials — applying them to build dashboards, generate reports, and derive actionable insights from real data.</p>
+            <p>Beyond the technical side, they studied the business fundamentals of two core industries — logistics and e-commerce — developing a practical understanding of supply chain performance, sales analytics, inventory reporting, operational KPIs, and marketing analysis. This gave them the ability to not only work with data, but to understand the business context behind it.</p>
+            <p>On a personal level, Mayada stood out as hardworking, disciplined, and a reliable team player. They met every deadline, collaborated effectively with peers, and approached every challenge with professionalism and a genuine willingness to grow.</p>
+            <p>I recommend Mayada Amgad Abdelazim Almahdy with full confidence for a Junior Data or Business Intelligence role and am happy to speak further upon request.</p>
+            <p>Yours sincerely,<br>Sameh Albadry — Program Lead, IBSRA</p>
+            <button class="letter-view-btn" type="button" data-img="images/testimonial-ibsra-letter.jpg">🔍 View signed original (with seal &amp; signature)</button>
+          </div>
+        </details>
       </blockquote>
     </div>
   </section>
@@ -994,9 +1025,9 @@
     lightbox.setAttribute('aria-hidden', 'true');
     lightboxImg.src = '';
   };
-  document.querySelectorAll('.cert-card[data-img]').forEach(card => {
+  document.querySelectorAll('.cert-card[data-img], .letter-view-btn[data-img]').forEach(card => {
     const src = card.dataset.img;
-    const title = card.querySelector('h3')?.textContent || 'Certificate';
+    const title = card.querySelector('h3')?.textContent || 'IBSRA Recommendation Letter';
     card.addEventListener('click', () => openLightbox(src, title));
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(src, title); }
