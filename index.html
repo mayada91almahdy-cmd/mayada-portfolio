@@ -696,7 +696,7 @@
       <div class="sec-head">
         <span class="sec-tag">04 — Gallery</span>
         <h2>Dashboards in view.</h2>
-        <p>Each card can hold several pages of the same dashboard — use the arrows to browse. See "Adding your screenshots" in the setup guide for filenames.</p>
+        <p>Each card can hold several pages of the same dashboard — use the arrows to browse, or click any image to view it full-size.</p>
       </div>
       <div class="gallery-grid" id="galleryGrid"><!-- populated by script below --></div>
     </div>
@@ -959,6 +959,10 @@
     `;
     grid.appendChild(item);
 
+    const mainImg = item.querySelector('img');
+    mainImg.style.cursor = 'zoom-in';
+    mainImg.addEventListener('click', () => openLightbox(mainImg.src, mainImg.alt));
+
     if (proj.count > 1) {
       const shot = item.querySelector('.shot');
       const pageCount = item.querySelector('.car-page-count');
@@ -969,13 +973,15 @@
         const img = shot.querySelector('img') || document.createElement('img');
         img.src = `images/${proj.base}-${current+1}.png`;
         img.alt = `${proj.title} screenshot ${current+1}`;
+        img.style.cursor = 'zoom-in';
+        img.onclick = () => openLightbox(img.src, img.alt);
         if (!shot.contains(img)) shot.prepend(img);
         pageCount.textContent = `${current+1}/${proj.count}`;
         dots.forEach((d,di)=>d.classList.toggle('active', di===current));
       };
-      item.querySelector('.car-prev').addEventListener('click', ()=>show(current-1));
-      item.querySelector('.car-next').addEventListener('click', ()=>show(current+1));
-      dots.forEach(d => d.addEventListener('click', ()=>show(+d.dataset.i)));
+      item.querySelector('.car-prev').addEventListener('click', (e) => { e.stopPropagation(); show(current-1); });
+      item.querySelector('.car-next').addEventListener('click', (e) => { e.stopPropagation(); show(current+1); });
+      dots.forEach(d => d.addEventListener('click', (e) => { e.stopPropagation(); show(+d.dataset.i); }));
     }
   });
   // back to top
